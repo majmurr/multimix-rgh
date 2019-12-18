@@ -2,17 +2,7 @@ data_organise <- function(dframe, Init_grp, cdep=NULL, lcdep=NULL,
                minpstar = 1e-9, nIt = 60) {
 Init_grp <- as.factor(Init_grp)              
 ## Functions 
-count.unique <- function(x) length(unique(x))
-# Pairing functions for small upper triangle / u < v /
-pair.index <- function(u, v) {
-   0.5*v^2 - 1.5*v + u + 1
-}
-right <- function(N) {
-   floor(1.5 + 0.5*sqrt(-7 + 8*N))
-}   
-left <- function(N) {
-   N - pair.index(1, right(N)) + 1
-}
+# Should already be loaded.
 ## Setup Constants 
 n <- dim(dframe)[1]
 p <- dim(dframe)[2]
@@ -88,7 +78,6 @@ for (i in seq_along(lcdep) ) {
     }}}
  D <- list(cdep = cdep,
            clink = clink,
-           coltype = coltype,
            cprods = cprods,
            cvals = cvals,
            cvals2 = cvals2,
