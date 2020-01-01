@@ -36,8 +36,13 @@ first.Z.to.P <- function(D) {
     for (i in seq_along(dlink)) dstat[[i]] <- crossprod(W, dvals[[i]])
     for (i in seq_along(lcdisc)) ldstat[[i]] <- crossprod(W, ldvals[[i]])
     ostat <- crossprod(W, ovals)
-    ostat2 <- crossprod(W, ovals2)
-    ovar <- ostat2 - ostat^2
+    #ostat2 <- crossprod(W, ovals2)
+    #ovar <- ostat2 - ostat^2
+    ovar <- ostat
+    for (j in seq_len(q)) {
+      ovar[j,] <- varw(ovals, W[,j])
+    }
+    # ns
     pistat <- ppi
     for (i in seq_along(cdep) ) {
       cstat[[i]] <- crossprod(W, cvals[[i]])
