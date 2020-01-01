@@ -1,5 +1,7 @@
 ## Functions
-
+varw = function(x, wgt){
+  cov.wt(x, wgt, cor = FALSE, center = TRUE, method="ML")$cov
+}
 count.unique <- function(x) length(unique(x))
 # Pairing functions for small upper triangle / u < v /
 pair.index <- function(u, v) {
