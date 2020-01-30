@@ -10,7 +10,14 @@ first.Z.to.P <- function(D) {
   ldstat <- vector("list", length(ldlink))
   cstat <- vector("list", length(cdep))
   ###
-  lcstat <- replicate(length(lcdep), list())
+  nlevs <- rep(0, length(lcdep))
+  for (cno in seq_along(lcdep) ) nlevs[cno] <- nlevels(dframe[,lcdep[[cno]][1]])
+  lcstat <- lcqstat <-  replicate(length(lcdep), list())
+  for (cno in seq_along(lcdep)) {
+    for (j in 1:q) {
+      lcqstat[[cno]][[j]] <- matrix(0, nrow=nlevs[cno], ncol=length(lcdep[[cno]]) - 1)
+    }
+  }
   ###
   MVMV <- list()
   for (i in seq_along(cdep) ) {
@@ -56,6 +63,7 @@ first.Z.to.P <- function(D) {
         WW <- W[group,]%*%diag(1/gtot)
         lcstat[[i]][[lv]] <- crossprod(WW,
                         lcvals[[i]][group, , drop=FALSE])
+        lcqstat[[i]][[j]][lv, ] <- lcstat[[i]][[lv]][j, ]        
         Temp <- Temp + varw(lcvals[[i]][group, , drop=FALSE], WW[,j])*
                        ldstat[[i]][j,lv]
       } #lv  
@@ -65,16 +73,11 @@ first.Z.to.P <- function(D) {
 P <- list(dstat = dstat,
             ldstat = ldstat,
             ostat = ostat,
-            #ostat2 = ostat2,
-            #ovar = ovar,
+            ovar = ovar,
             pistat = pistat,
             cstat = cstat,
-            #cstat2 = cstat2,
-            #cvar = cvar,
-            #cpstat = cpstat,
             lcstat = lcstat,
-            #lcstat2 = lcstat2,
-            #lcpstat = lcpstat,
+            lcqstat = lcqstat,
             MVMV = MVMV,
             LMV = LMV,
 	     W = W)
