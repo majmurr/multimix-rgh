@@ -35,6 +35,10 @@ dvals <- list()
 ldvals <- list()
 for (i in seq_along(dlink) ) dvals[[i]] <- model.matrix(~ 0 + dframe[ ,dlink[i]])
 for (i in seq_along(lcdisc) ) ldvals[[i]] <- model.matrix(~ 0 + dframe[ ,lcdisc[i]])
+ldvnum <- ldvals
+for (cno in seq_along(lcdep) ) {
+  ldvnum[[cno]] <- as.numeric(ldvals[[cno]]%*%seq_len(ldlevs[cno]))
+}
 ovals <-  as.matrix(dframe[ ,olink])
 ovals2 <-  ovals^2
 cvals <- cvals2 <- list()
@@ -67,6 +71,13 @@ for (i in seq_along(lcdep) ) {
   }
 }
 
+lcqexp <- replicate(length(lcdep), list() )
+for (cno in seq_along(lcdep)) {
+  for (j in 1:q) {
+    lcqexp[[cno]][[j]] <- matrix(0, nrow=n, ncol=length(lcdep[[cno]]) - 1)
+  }
+}
+
 ldxc <- list()
 for (i in seq_along(lcdep) ) {
   ldxc[[i]] <- list()
@@ -92,12 +103,14 @@ for (i in seq_along(lcdep) ) {
            lcdisc = lcdisc,
            lclink = lclink,
            lcprods = lcprods,
+           lcqexp = lcqexp,
            lcvals = lcvals,
            lcvals2 = lcvals2,
            ld = ld,
            ldlevs = ldlevs,
            ldlink = ldlink,
            ldvals = ldvals,
+           ldvnum = ldvnum,
            ldxc = ldxc,
            mc = mc,
            md = md,

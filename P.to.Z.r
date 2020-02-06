@@ -40,26 +40,24 @@ P.to.Z <- function(P, D) {
               }
         	 }
         }	 
+        
+        for (cno in seq_along(lcdep)) {
+            for (j in 1:q) {
+                lcqexp[[cno]][[j]] <- lcqstat[[cno]][[j]][ldvnum[[cno]], ]
+            }
+        }
 
         lcll <- matrix(0, nrow=n, ncol=q)
-        lmean <- list()
         for (j in 1:q) {
-          cno <- 0
-          w <- W[,j]
-          while(cno < length(lcdep)) {
-            cno <- cno + 1
-            nlev <- length(ldxc[[cno]])
-            est <- vector("list", nlev)
-            ndw <- colSums(diag(w) %*% ldvals[[cno]]) 
-            for (lev in seq_len(nlev)) {
-              wdxc_ <- diag(w) %*% ldxc[[cno]][[lev]]
-              est[[lev]] <- colSums(wdxc_)/ndw[lev] 
+            cno <- 0
+            w <- W[,j]
+            while(cno < length(lcdep)) {
+                cno <- cno + 1
+                lcqexp[[cno]][[j]] <- lcqstat[[cno]][[j]][ldvnum[[cno]], ]
+                lcll[,j] <- lcll[,j] +
+                    dmvnorm(lcvals[[cno]] - lcqexp[[cno]][[j]],
+                            mean = rep(0,dim(lcvals[[cno]])[2]), sigma = LMV[[cno]][[j]], log = TRUE)
             }
-            lmean[[cno]] <- ldvals[[cno]] %*% do.call(rbind, est)
-            lcll[,j] <- lcll[,j] +
-            dmvnorm(lcvals[[cno]] - lmean[[cno]],
-             mean = rep(0,dim(lcvals[[cno]])[2]), sigma = LMV[[cno]][[j]], log = TRUE)
-          }
         }
 
         llx <- ollq + cll + dllq + ldllq + lcll

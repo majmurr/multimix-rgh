@@ -40,6 +40,7 @@ P <- list(dstat = dstat,
             pistat = pistat,
             cstat = cstat,
             lcstat = lcstat,
+            lcqstat = lcqstat,
             MVMV = MVMV,
             LMV = LMV,
 	     W = W)
